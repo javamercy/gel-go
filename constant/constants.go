@@ -1,0 +1,46 @@
+package constant
+
+const (
+	GIT_OBJECT_DELIMITER        = byte(0x00)
+	GIT_OBJECT_DELIMITER_LENGTH = 1
+
+	GIT_FIELD_DELIMITER        = byte(' ') // 0x20
+	GIT_FIELD_DELIMITER_LENGTH = 1
+)
+const (
+	GIT_OBJECT_TYPE_BLOB    = "blob"
+	GIT_OBJECT_TYPE_TREE    = "tree"
+	GIT_OBJECT_TYPE_COMMIT  = "commit"
+	GIT_OBJECT_TYPE_TAG     = "tag"
+	GIT_OBJECT_TYPE_UNKNOWN = "unknown"
+)
+
+const (
+	GIT_OBJECT_HEADER_BLOB    = "blob "
+	GIT_OBJECT_HEADER_TREE    = "tree "
+	GIT_OBJECT_HEADER_COMMIT  = "commit "
+	GIT_OBJECT_HEADER_TAG     = "tag "
+	GIT_OBJECT_HEADER_UNKNOWN = "unknown "
+)
+
+const (
+	GIT_OBJECT_TYPE_BLOB_LENGTH    = len(GIT_OBJECT_HEADER_BLOB)
+	GIT_OBJECT_TYPE_TREE_LENGTH    = len(GIT_OBJECT_HEADER_TREE)
+	GIT_OBJECT_TYPE_COMMIT_LENGTH  = len(GIT_OBJECT_HEADER_COMMIT)
+	GIT_OBJECT_TYPE_TAG_LENGTH     = len(GIT_OBJECT_HEADER_TAG)
+	GIT_OBJECT_TYPE_UNKNOWN_LENGTH = len(GIT_OBJECT_HEADER_UNKNOWN)
+)
+
+const (
+	GIT_REGULAR_FILE_PERMISSIONS    = 0644 // -rw-r--r--
+	GIT_EXECUTABLE_FILE_PERMISSIONS = 0755 // -rwxr-xr-x
+	GIT_DIRECTORY_PERMISSIONS       = 0755 // drwxr-xr-x
+)
+
+const (
+	GIT_OBJECT_MODE_BLOB       = "100644" // non-executable file
+	GIT_OBJECT_MODE_EXECUTABLE = "100755" // executable file
+	GIT_OBJECT_MODE_TREE       = "040000" // directory
+	GIT_OBJECT_MODE_SYMLINK    = "120000" // symbolic link
+	GIT_OBJECT_MODE_COMMIT     = "160000" // gitlink (submodule)
+)
