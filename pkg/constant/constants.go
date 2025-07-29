@@ -6,6 +6,7 @@ const (
 
 	GEL_FIELD_DELIMITER        = byte(' ') // 0x20
 	GEL_FIELD_DELIMITER_LENGTH = 1
+	GEL_FIELD_DELIMITER_STRING = " "
 )
 const (
 	GEL_OBJECT_TYPE_BLOB    = "blob"
@@ -43,4 +44,15 @@ const (
 	GEL_OBJECT_MODE_TREE       = "040000" // directory
 	GEL_OBJECT_MODE_SYMLINK    = "120000" // symbolic link
 	GEL_OBJECT_MODE_COMMIT     = "160000" // gellink (submodule)
+)
+
+const (
+	GEL_COMMIT_FIELD_TREE      = "tree "
+	GEL_COMMIT_FIELD_PARENT    = "parent "
+	GEL_COMMIT_FIELD_AUTHOR    = "author "
+	GEL_COMMIT_FIELD_COMMITTER = "committer "
+)
+
+const (
+	GEL_COMMIT_MESSAGE_SEPARATOR = "\n"
 )
