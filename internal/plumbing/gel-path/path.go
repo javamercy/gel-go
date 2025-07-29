@@ -44,11 +44,12 @@ func FindGelPath(startPath string) (string, error) {
 }
 
 func GetObjectPath(hash []byte) (string, error) {
-	if err := ensureGelPath(); err != nil {
+	objectsPath, err := GetObjectsPath()
+	if err != nil {
 		return "", err
 	}
 	hexHash := hex.EncodeToString(hash)
-	return filepath.Join(gelPath, "objects", hexHash[:2], hexHash[2:]), nil
+	return filepath.Join(objectsPath, hexHash[:2], hexHash[2:]), nil
 }
 
 func GetObjectsPath() (string, error) {
