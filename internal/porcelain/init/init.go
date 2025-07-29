@@ -1,7 +1,7 @@
 package init_gel
 
 import (
-	"gel/constant"
+	"gel/pkg/constant"
 	"os"
 )
 

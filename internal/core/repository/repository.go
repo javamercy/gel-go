@@ -15,8 +15,8 @@ func NewRepository(storage storage.ObjectStorage) *Repository {
 	}
 }
 
-func (repository *Repository) GetObject(hash []byte) (object.Object, error) {
-	return repository.storage.Get(hash)
+func (repository *Repository) GetObject(hexHash string) (object.Object, error) {
+	return repository.storage.Get(hexHash)
 }
 
 func (repository *Repository) SaveObject(object object.Object) ([]byte, error) {

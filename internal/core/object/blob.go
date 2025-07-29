@@ -1,7 +1,7 @@
 package object
 
 import (
-	"gel/constant"
+	"gel/pkg/constant"
 	"strconv"
 )
 
@@ -29,6 +29,7 @@ func (blob *Blob) Serialize() []byte {
 	return append([]byte(header), blob.Data...)
 }
 
-func (blob *Blob) Deserialize(hash []byte) ([]byte, error) {
-	return nil, nil
+func (blob *Blob) Deserialize(data []byte) error {
+	blob.Data = data
+	return nil
 }

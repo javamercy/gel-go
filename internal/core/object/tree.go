@@ -1,7 +1,8 @@
 package object
 
 import (
-	"gel/constant"
+	"errors"
+	"gel/pkg/constant"
 	"strconv"
 )
 
@@ -10,6 +11,7 @@ type EntryType int
 const (
 	BLOB_ENTRY EntryType = iota
 	TREE_ENTRY
+	COMMIT_ENTRY
 	UNKNOWN_ENTRY
 )
 
@@ -91,9 +93,56 @@ func (tree *Tree) Serialize() []byte {
 	return append([]byte(header), serialized...)
 }
 
-func (tree *Tree) Deserialize(hash []byte) ([]byte, error) {
+func (tree *Tree) Deserialize(data []byte) error {
 
-	return nil, nil
+	i := 0
+	for i < len(data) {
+		modeStart := i
+		for i != len(data) && data[i] != constant.GEL_FIELD_DELIMITER {
+			i++
+		}
+		if i == len(data) {
+			return errors.New("error parsing tree entry mode")
+		}
+		mode := string(data[modeStart:i])
+		i++
+
+		nameStart := i
+		for i != len(data) && data[i] != constant.GEL_OBJECT_DELIMITER {
+			i++
+		}
+
+		if i == len(data) {
+			return errors.New("error parsing tree entry name")
+		}
+		name := string(data[nameStart:i])
+		i++
+
+		hash := data[i : i+20]
+		i += 20
+
+		var entryType EntryType
+		switch mode {
+		case constant.GEL_OBJECT_MODE_BLOB:
+			entryType = BLOB_ENTRY
+		case constant.GEL_OBJECT_MODE_TREE:
+			entryType = TREE_ENTRY
+		case constant.GEL_OBJECT_MODE_COMMIT:
+			entryType = COMMIT_ENTRY
+		default:
+			entryType = UNKNOWN_ENTRY
+		}
+
+		tree.Entries = append(tree.Entries, TreeEntry{
+			Name: name,
+			Mode: mode,
+			Hash: hash,
+			Type: entryType,
+		})
+	}
+
+	return nil
+
 }
 
 func (tree *Tree) serializeEntries() []byte {

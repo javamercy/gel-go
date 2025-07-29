@@ -3,7 +3,7 @@ package gel_path
 import (
 	"encoding/hex"
 	"errors"
-	"gel/constant"
+	"gel/pkg/constant"
 	"os"
 	"path/filepath"
 	"sync"

@@ -3,10 +3,10 @@ package storage
 import (
 	"encoding/hex"
 	"errors"
-	"gel/constant"
 	"gel/internal/core/object"
 	"gel/internal/plumbing/gel-path"
 	"gel/pkg/compression"
+	"gel/pkg/constant"
 	"gel/pkg/hashing"
 	"os"
 	fp "path/filepath"
@@ -27,8 +27,7 @@ func NewFilesystem() *Filesystem {
 	}
 }
 
-func (filesystem *Filesystem) Get(hash []byte) (object.Object, error) {
-	hexHash := hex.EncodeToString(hash)
+func (filesystem *Filesystem) Get(hexHash string) (object.Object, error) {
 	fullPath := fp.Join(filesystem.objectsPath, hexHash[:2], hexHash[2:])
 
 	data, err := os.ReadFile(fullPath)
@@ -67,15 +66,13 @@ func (filesystem *Filesystem) Save(object object.Object) ([]byte, error) {
 	return hash, nil
 }
 
-func (filesystem *Filesystem) Exists(hash []byte) bool {
-	hexHash := hex.EncodeToString(hash)
+func (filesystem *Filesystem) Exists(hexHash string) bool {
 	filePath := fp.Join(filesystem.objectsPath, hexHash[:2], hexHash[2:])
 	_, err := os.Stat(filePath)
 	return err == nil
 }
 
 func parseObject(decompressedData []byte) (object.Object, error) {
-
 	objectDelimiterIndex := -1
 	for i, b := range decompressedData {
 		if b == constant.GEL_OBJECT_DELIMITER {
@@ -100,9 +97,26 @@ func parseObject(decompressedData []byte) (object.Object, error) {
 
 	switch objectType {
 	case constant.GEL_OBJECT_TYPE_BLOB:
-		return object.NewBlob(content), nil
+		blob := &object.Blob{}
+		err := blob.Deserialize(content)
+		if err != nil {
+			return nil, err
+		}
+		return blob, nil
 	case constant.GEL_OBJECT_TYPE_TREE:
-		return object.NewTreeFromEntriesData(content), nil
+		tree := &object.Tree{}
+		err := tree.Deserialize(content)
+		if err != nil {
+			return nil, err
+		}
+		return tree, nil
+	case constant.GEL_OBJECT_TYPE_COMMIT:
+		commit := &object.Commit{}
+		err := commit.Deserialize(content)
+		if err != nil {
+			return nil, err
+		}
+		return commit, nil
 	default:
 		return nil, errors.New("invalid git object type")
 	}

@@ -1,16 +1,44 @@
 package add
 
 import (
-	"gel/constant"
+	"fmt"
 	"gel/internal/core/object"
 	"gel/internal/core/repository"
+	"gel/pkg/constant"
 	"os"
 	"path/filepath"
 )
 
-func SaveFile(repository *repository.Repository, path string) ([]byte, error) {
-	data, err := os.ReadFile(path)
+func Add(repo *repository.Repository, args []string) error {
+	if len(args) < 1 {
+		return fmt.Errorf("usage: gel add <file(s)>")
+	}
 
+	for _, path := range args {
+		if _, err := os.Stat(path); os.IsNotExist(err) {
+			return fmt.Errorf("pathspec '%s' did not match any files", path)
+		}
+
+		info, err := os.Stat(path)
+		if err != nil {
+			return fmt.Errorf("error accessing '%s': %v", path, err)
+		}
+
+		if info.IsDir() {
+			_, err = Directory(repo, path)
+		} else {
+			_, err = File(repo, path)
+		}
+
+		if err != nil {
+			return fmt.Errorf("error adding '%s': %v", path, err)
+		}
+	}
+	return nil
+}
+
+func File(repository *repository.Repository, path string) ([]byte, error) {
+	data, err := os.ReadFile(path)
 	if err != nil {
 		return nil, err
 	}
@@ -19,8 +47,7 @@ func SaveFile(repository *repository.Repository, path string) ([]byte, error) {
 	return repository.SaveObject(blob)
 }
 
-func SaveDirectory(repository *repository.Repository, path string) ([]byte, error) {
-
+func Directory(repository *repository.Repository, path string) ([]byte, error) {
 	entries, err := os.ReadDir(path)
 	if err != nil {
 		return nil, err
@@ -30,7 +57,7 @@ func SaveDirectory(repository *repository.Repository, path string) ([]byte, erro
 	for _, entry := range entries {
 		entryPath := filepath.Join(path, entry.Name())
 		if entry.IsDir() {
-			hash, err := SaveDirectory(repository, entryPath)
+			hash, err := Directory(repository, entryPath)
 			if err != nil {
 				return nil, err
 			}
@@ -42,7 +69,7 @@ func SaveDirectory(repository *repository.Repository, path string) ([]byte, erro
 			}
 			tree.AddEntry(treeEntry)
 		} else {
-			hash, err := SaveFile(repository, entryPath)
+			hash, err := File(repository, entryPath)
 			if err != nil {
 				return nil, err
 			}
@@ -58,5 +85,4 @@ func SaveDirectory(repository *repository.Repository, path string) ([]byte, erro
 	}
 
 	return repository.SaveObject(tree)
-
 }
