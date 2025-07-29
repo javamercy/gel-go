@@ -44,10 +44,10 @@ func main() {
 			}
 
 			switch obj.Type() {
-			case constant.GIT_OBJECT_TYPE_BLOB:
+			case constant.GEL_OBJECT_TYPE_BLOB:
 				blob := obj.(*object.Blob)
 				fmt.Fprintf(os.Stdout, "%s", blob.Data)
-			case constant.GIT_OBJECT_TYPE_TREE:
+			case constant.GEL_OBJECT_TYPE_TREE:
 				tree := obj.(*object.Tree)
 				for _, entry := range tree.Entries {
 					entryType := "blob"
@@ -84,7 +84,7 @@ func main() {
 				fmt.Fprintf(os.Stderr, "Error retrieving object: %s\n", err)
 			}
 
-			if obj.Type() != constant.GIT_OBJECT_TYPE_TREE {
+			if obj.Type() != constant.GEL_OBJECT_TYPE_TREE {
 				fmt.Fprintf(os.Stderr, "Object is not a tree\n")
 				os.Exit(1)
 			}

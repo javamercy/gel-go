@@ -36,14 +36,14 @@ func NewTreeFromEntriesData(data []byte) *Tree {
 	for i < len(data) {
 
 		modeStart := i
-		for data[i] != constant.GIT_FIELD_DELIMITER {
+		for data[i] != constant.GEL_FIELD_DELIMITER {
 			i++
 		}
 		mode := string(data[modeStart:i])
 		i++
 
 		nameStart := i
-		for data[i] != constant.GIT_OBJECT_DELIMITER {
+		for data[i] != constant.GEL_OBJECT_DELIMITER {
 			i++
 		}
 		name := string(data[nameStart:i])
@@ -54,9 +54,9 @@ func NewTreeFromEntriesData(data []byte) *Tree {
 
 		var entryType EntryType
 		switch mode {
-		case constant.GIT_OBJECT_MODE_BLOB:
+		case constant.GEL_OBJECT_MODE_BLOB:
 			entryType = BLOB_ENTRY
-		case constant.GIT_OBJECT_MODE_TREE:
+		case constant.GEL_OBJECT_MODE_TREE:
 			entryType = TREE_ENTRY
 		default:
 			entryType = UNKNOWN_ENTRY
@@ -76,7 +76,7 @@ func (tree *Tree) AddEntry(entry TreeEntry) {
 }
 
 func (tree *Tree) Type() string {
-	return constant.GIT_OBJECT_TYPE_TREE
+	return constant.GEL_OBJECT_TYPE_TREE
 }
 
 func (tree *Tree) Size() int {
@@ -87,7 +87,7 @@ func (tree *Tree) Size() int {
 func (tree *Tree) Serialize() []byte {
 
 	serialized := tree.serializeEntries()
-	header := constant.GIT_OBJECT_HEADER_TREE + strconv.Itoa(len(serialized)) + string(constant.GIT_OBJECT_DELIMITER)
+	header := constant.GEL_OBJECT_HEADER_TREE + strconv.Itoa(len(serialized)) + string(constant.GEL_OBJECT_DELIMITER)
 	return append([]byte(header), serialized...)
 }
 
@@ -100,9 +100,9 @@ func (tree *Tree) serializeEntries() []byte {
 	var serialized []byte
 	for _, entry := range tree.Entries {
 		line := []byte(entry.Mode)
-		line = append(line, constant.GIT_FIELD_DELIMITER)
+		line = append(line, constant.GEL_FIELD_DELIMITER)
 		line = append(line, []byte(entry.Name)...)
-		line = append(line, constant.GIT_OBJECT_DELIMITER)
+		line = append(line, constant.GEL_OBJECT_DELIMITER)
 		line = append(line, entry.Hash...)
 		serialized = append(serialized, line...)
 	}

@@ -35,7 +35,7 @@ func SaveDirectory(repository *repository.Repository, path string) ([]byte, erro
 				return nil, err
 			}
 			treeEntry := object.TreeEntry{
-				Mode: constant.GIT_OBJECT_MODE_TREE,
+				Mode: constant.GEL_OBJECT_MODE_TREE,
 				Name: entry.Name(),
 				Hash: hash,
 				Type: object.TREE_ENTRY,
@@ -48,7 +48,7 @@ func SaveDirectory(repository *repository.Repository, path string) ([]byte, erro
 			}
 
 			treeEntry := object.TreeEntry{
-				Mode: constant.GIT_OBJECT_MODE_BLOB,
+				Mode: constant.GEL_OBJECT_MODE_BLOB,
 				Name: entry.Name(),
 				Hash: hash,
 				Type: object.BLOB_ENTRY,

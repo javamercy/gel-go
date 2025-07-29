@@ -1,9 +1,9 @@
 package constant
 
 const (
-	ERR_USAGE_MESSAGE      = "usage: mygit <command> [<args>...]\n"
+	ERR_USAGE_MESSAGE      = "usage: gel <command> [<args>...]\n"
 	ERR_UNKNOWN_COMMAND    = "Unknown command %s\n"
-	ERR_GIT_NOT_REPOSITORY = "not a git repository (or any of the parent directories): .git"
+	ERR_GEL_NOT_REPOSITORY = "not a gel repository (or any of the parent directories): .gel"
 )
 
 const (
@@ -13,11 +13,11 @@ const (
 )
 
 const (
-	ERR_GIT_PATH_NOT_SET = "git gitpath not set"
+	ERR_GEL_PATH_NOT_SET = "gel path not set"
 	ERR_INVALID_HASH     = "invalid hashing"
 )
 
 const (
-	MSG_INITIALIZED_GIT_DIRECTORY = "Initialized git directory"
+	MSG_INITIALIZED_GEL_DIRECTORY = "Initialized gel directory"
 	MSG_WRITING_TREE_FOR          = "Writing tree for %s\n"
 )

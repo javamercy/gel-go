@@ -1,4 +1,4 @@
-package gitpath
+package gel_path
 
 import (
 	"encoding/hex"
@@ -37,7 +37,7 @@ func FindGelPath(startPath string) (string, error) {
 		}
 		parentPath := filepath.Dir(currentPath)
 		if parentPath == currentPath {
-			return "", errors.New(constant.ERR_GIT_NOT_REPOSITORY)
+			return "", errors.New(constant.ERR_GEL_NOT_REPOSITORY)
 		}
 		currentPath = parentPath
 	}

@@ -5,7 +5,7 @@ import (
 	"errors"
 	"gel/constant"
 	"gel/internal/core/object"
-	"gel/internal/plumbing/gitpath"
+	"gel/internal/plumbing/gel-path"
 	"gel/pkg/compression"
 	"gel/pkg/hashing"
 	"os"
@@ -18,7 +18,7 @@ type Filesystem struct {
 }
 
 func NewFilesystem() *Filesystem {
-	path, err := gitpath.GetObjectsPath()
+	path, err := gel_path.GetObjectsPath()
 	if err != nil {
 		panic(err)
 	}
@@ -55,12 +55,12 @@ func (filesystem *Filesystem) Save(object object.Object) ([]byte, error) {
 	hexHash := hex.EncodeToString(hash)
 	dirPath := fp.Join(filesystem.objectsPath, hexHash[:2])
 
-	if err := os.MkdirAll(dirPath, constant.GIT_DIRECTORY_PERMISSIONS); err != nil {
+	if err := os.MkdirAll(dirPath, constant.GEL_DIRECTORY_PERMISSIONS); err != nil {
 		return nil, err
 	}
 
 	filePath := fp.Join(dirPath, hexHash[2:])
-	if err := os.WriteFile(filePath, compressedData, constant.GIT_REGULAR_FILE_PERMISSIONS); err != nil {
+	if err := os.WriteFile(filePath, compressedData, constant.GEL_REGULAR_FILE_PERMISSIONS); err != nil {
 		return nil, err
 	}
 
@@ -78,7 +78,7 @@ func parseObject(decompressedData []byte) (object.Object, error) {
 
 	objectDelimiterIndex := -1
 	for i, b := range decompressedData {
-		if b == constant.GIT_OBJECT_DELIMITER {
+		if b == constant.GEL_OBJECT_DELIMITER {
 			objectDelimiterIndex = i
 			break
 		}
@@ -99,9 +99,9 @@ func parseObject(decompressedData []byte) (object.Object, error) {
 	objectType := headerParts[0]
 
 	switch objectType {
-	case constant.GIT_OBJECT_TYPE_BLOB:
+	case constant.GEL_OBJECT_TYPE_BLOB:
 		return object.NewBlob(content), nil
-	case constant.GIT_OBJECT_TYPE_TREE:
+	case constant.GEL_OBJECT_TYPE_TREE:
 		return object.NewTreeFromEntriesData(content), nil
 	default:
 		return nil, errors.New("invalid git object type")
